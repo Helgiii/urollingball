@@ -441,7 +441,7 @@ namespace mygame
 
 			//user input
 			if (
-				(Input.mousePresent && (Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2) || Input.GetMouseButton(3)))
+				(Input.mousePresent && Input.GetMouseButtonDown(0))
 				|| (Input.touchSupported && Input.touchCount>0)
 				)
 			{
