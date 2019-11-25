@@ -17,7 +17,6 @@ namespace mygame
 		protected int[,] m_blockPageNext;
 		protected int m_blockPageIndex;
 		
-
 		protected int m_colsInPage;
 
 		protected float m_passedDistance = 0.0f;
@@ -441,7 +440,7 @@ namespace mygame
 
 			//user input
 			if (
-				(Input.mousePresent && (Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2) || Input.GetMouseButton(3)))
+				(Input.mousePresent && Input.GetMouseButtonDown(0))
 				|| (Input.touchSupported && Input.touchCount>0)
 				)
 			{
