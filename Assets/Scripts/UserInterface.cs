@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 namespace mygame
 {
@@ -12,6 +13,44 @@ namespace mygame
 		public Transform m_scrDeath = null;
 
 		protected Level m_lvl = null;
+
+
+		// Normal raycasts do not work on UI elements, they require a special kind
+		GraphicRaycaster raycaster;
+
+		void Awake()
+		{
+			// Get both of the components we need to do this
+			this.raycaster = GetComponent<GraphicRaycaster>();
+		}
+
+		void Update()
+		{
+			//Check if the left Mouse button is clicked
+			if (Input.GetKeyDown(KeyCode.Mouse0))
+			{
+				//Set up the new Pointer Event
+				PointerEventData pointerData = new PointerEventData(EventSystem.current);
+				List<RaycastResult> results = new List<RaycastResult>();
+
+				//Raycast using the Graphics Raycaster and mouse click position
+				pointerData.position = Input.mousePosition;
+				this.raycaster.Raycast(pointerData, results);
+
+				//For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+				//foreach (RaycastResult result in results)
+				//{
+					//Debug.Log("Hit " + result.gameObject.name);
+				//}
+
+				if (results.Count == 0)
+					m_lvl.TryJump();
+			}
+		}
+
+
+
+
 
 		public void SetLevel(Level lvl) { m_lvl = lvl;  }
 

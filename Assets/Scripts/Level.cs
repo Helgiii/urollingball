@@ -39,7 +39,7 @@ namespace mygame
 		protected float[] m_platYs = { 0, 0 };//top and bottom positions
 
 		//pool of released game objects: objecttype, array
-		public Dictionary<int, List<GameObject>> m_pool;
+		protected Dictionary<int, List<GameObject>> m_pool;
 
 		//active objects
 		protected List<GameObject> m_objects;
@@ -438,26 +438,6 @@ namespace mygame
 				return;
 			}
 
-			//user input
-			if (
-				(Input.mousePresent && Input.GetMouseButtonDown(0))
-				|| (Input.touchSupported && Input.touchCount>0)
-				)
-			{
-				if (m_ballState == BALLSTATE_DOWN)
-				{
-					int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 1);
-					m_jumpDangerScores = Mathf.Min(blocksTillDanger,5);
-					m_ballState = BALLSTATE_MOVING_UP;
-				}
-				else if (m_ballState == BALLSTATE_UP)
-				{
-					int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 0);
-					m_jumpDangerScores = Mathf.Min(blocksTillDanger, 5);
-					m_ballState = BALLSTATE_MOVING_DOWN;
-				}
-			}
-
 			//set new ball position relative to cameraview
 			Vector3 pos = m_ball.transform.position;
 			pos.x = GetBallXFromCamera(camera);
@@ -546,6 +526,25 @@ namespace mygame
 			}
 
 			UpdateHud();
+		}
+
+		public void TryJump()
+		{
+			if (m_gameState != GSTATE_ON)
+				return;
+
+			if (m_ballState == BALLSTATE_DOWN)
+			{
+				int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 1);
+				m_jumpDangerScores = Mathf.Min(blocksTillDanger, 5);
+				m_ballState = BALLSTATE_MOVING_UP;
+			}
+			else if (m_ballState == BALLSTATE_UP)
+			{
+				int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 0);
+				m_jumpDangerScores = Mathf.Min(blocksTillDanger, 5);
+				m_ballState = BALLSTATE_MOVING_DOWN;
+			}
 		}
 
 		//this could be bigger than 1 page, since we have 2 pages and are moving fast
