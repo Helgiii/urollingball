@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4191754294788447765}
-  - component: {fileID: 7526193200933104181}
   - component: {fileID: 551067280739028543}
   - component: {fileID: 2276939937351788584}
+  - component: {fileID: -1255333388194244065}
   m_Layer: 0
   m_Name: Hole
   m_TagString: Untagged
@@ -34,19 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7526193200933104181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4191754294788447774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5bcc9bb7e2772449bc3c826731c991, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_objType: 3
 --- !u!61 &551067280739028543
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -94,6 +81,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-1255333388194244065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4191754294788447774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cfb39ae56f66940ad0e924e7bb022f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_objType: 3
 --- !u!1 &5088283254849570064
 GameObject:
   m_ObjectHideFlags: 0

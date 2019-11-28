@@ -49,9 +49,6 @@ namespace mygame
 		}
 
 
-
-
-
 		public void SetLevel(Level lvl) { m_lvl = lvl;  }
 
 		public void HideAllScreens()

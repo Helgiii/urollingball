@@ -39,10 +39,10 @@ namespace mygame
 		protected float[] m_platYs = { 0, 0 };//top and bottom positions
 
 		//pool of released game objects: objecttype, array
-		protected Dictionary<int, List<GameObject>> m_pool;
+		protected Dictionary<int, List<BaseObject>> m_pool;
 
 		//active objects
-		protected List<GameObject> m_objects;
+		protected List<BaseObject> m_objects;
 
 		//collision detection
 		protected Vector2 m_castDir = new Vector2(1, 0);
@@ -85,17 +85,17 @@ namespace mygame
 			//m_ballBottomY = -1.0f;
 
 			m_ball = GameObject.Find("Ball");
-			m_objects = new List<GameObject>();
+			m_objects = new List<BaseObject>();
 
-			m_pool = new Dictionary<int, List<GameObject>>();
+			m_pool = new Dictionary<int, List<BaseObject>>();
 			int i;
 			for (i = 0; i < Constants.OBJECT_TYPES.Length; ++i)
-				m_pool[Constants.OBJECT_TYPES[i]] = new List<GameObject>();
+				m_pool[Constants.OBJECT_TYPES[i]] = new List<BaseObject>();
 
 			//add one spike and get,store its size
-			GameObject gobj = CreateNewObject(Constants.OT_SPIKE);
+			BaseObject gobj = CreateNewObject(Constants.OT_SPIKE);
 			m_spikeWidth = gobj.GetComponent<SpriteRenderer>().bounds.size.x;
-			m_pool[Constants.OT_SPIKE].Add(gobj);
+			m_pool[Constants.OT_SPIKE].Add(gobj.GetComponent<BaseObject>());
 
 			//init generator
 			m_colsInPage = Mathf.FloorToInt(m_cameraHalfWidth * 2 * 3 / Constants.BLOCK_WIDTH);// Constants.SPEED_MAX * Time.fixedDeltaTime
@@ -113,8 +113,8 @@ namespace mygame
 			//release all objects from scene
 			while (m_objects.Count > 0)
 			{
-				m_objects[0].SetActive(false);
-				m_pool[m_objects[0].GetComponent<BaseObject>().m_objType].Add(m_objects[0]);
+				m_objects[0].gameObject.SetActive(false);
+				m_pool[m_objects[0].m_objType].Add(m_objects[0]);
 				m_objects.RemoveAt(0);
 			}			
 
@@ -308,26 +308,28 @@ namespace mygame
 			float xx = pageIndex * m_colsInPage * Constants.BLOCK_WIDTH;
 			float yy = m_platYs[row];
 
+			//GameObject gobject;
+
 			if (blockType == Constants.BT_PLATFORM)
 			{
-				GameObject gobj = GetFreeObject(Constants.OT_PLATFORM);
+				BaseObject bobj = GetFreeObject(Constants.OT_PLATFORM);
 
 				float objWidth = lenInBlocks * Constants.BLOCK_WIDTH;
-				gobj.transform.transform.localScale = new Vector2(objWidth, Constants.BLOCK_HEIGHT);
-				gobj.transform.position = new Vector2(xx + blockIndex * Constants.BLOCK_WIDTH + objWidth / 2, yy);
+				bobj.gameObject.transform.transform.localScale = new Vector2(objWidth, Constants.BLOCK_HEIGHT);
+				bobj.gameObject.transform.position = new Vector2(xx + blockIndex * Constants.BLOCK_WIDTH + objWidth / 2, yy);
 
-				m_objects.Add(gobj);
+				m_objects.Add(bobj);
 			}
 			else if (blockType == Constants.BT_HOLE)
 			{
-				GameObject gobj = GetFreeObject(Constants.OT_HOLE);
+				BaseObject bobj = GetFreeObject(Constants.OT_HOLE);
 
 				float blGroupWidth = lenInBlocks * Constants.BLOCK_WIDTH;
 				float objWidth = blGroupWidth - Constants.BLOCK_WIDTH / 2.5f * 2;
-				gobj.transform.transform.localScale = new Vector2(objWidth, Constants.BLOCK_HEIGHT + 0.1f);
-				gobj.transform.position = new Vector2(xx + blockIndex * Constants.BLOCK_WIDTH + blGroupWidth / 2, yy);
+				bobj.gameObject.transform.transform.localScale = new Vector2(objWidth, Constants.BLOCK_HEIGHT + 0.1f);
+				bobj.gameObject.transform.position = new Vector2(xx + blockIndex * Constants.BLOCK_WIDTH + blGroupWidth / 2, yy);
 
-				m_objects.Add(gobj);
+				m_objects.Add(bobj);
 			}
 			else if (blockType == Constants.BT_SPIKES)
 			{
@@ -340,8 +342,8 @@ namespace mygame
 				int i;
 				for (i = 0; i < cnt; ++i)
 				{
-					GameObject gobj = GetFreeObject(Constants.OT_SPIKE);
-					Vector3 scale = gobj.transform.transform.localScale;
+					BaseObject bobj = GetFreeObject(Constants.OT_SPIKE);
+					Vector3 scale = bobj.gameObject.transform.transform.localScale;
 					
 					if (row == 0)
 					{
@@ -354,35 +356,35 @@ namespace mygame
 						yy = m_platYs[row] + Constants.BLOCK_HEIGHT_HALF;
 					}
 
-					gobj.transform.position = new Vector2(xx + blockIndex*Constants.BLOCK_WIDTH + spikesPadding + i * m_spikeWidth + m_spikeWidth / 2.0f, yy);
-					gobj.transform.transform.localScale = scale;
+					bobj.gameObject.transform.position = new Vector2(xx + blockIndex*Constants.BLOCK_WIDTH + spikesPadding + i * m_spikeWidth + m_spikeWidth / 2.0f, yy);
+					bobj.gameObject.transform.transform.localScale = scale;
 
-					m_objects.Add(gobj);
+					m_objects.Add(bobj);
 				}
 			}
 		}
 
-		protected GameObject GetFreeObject(int objType, bool bAutoSetActive = true)
+		protected BaseObject GetFreeObject(int objType, bool bAutoSetActive = true)
 		{
-			GameObject gobj = null;
+			BaseObject bobj = null;
 
 			if (m_pool[objType].Count > 0)
 			{
 				//get the first existing object from pool, reinit this obj outside
-				gobj = m_pool[objType][0];
+				bobj = m_pool[objType][0];
 				m_pool[objType].RemoveAt(0);
-				gobj.SetActive(bAutoSetActive);
-				return gobj;
+				bobj.gameObject.SetActive(bAutoSetActive);
+				return bobj;
 			}
-			
+
 			//create a new obj since we dont have enough free ones
-			gobj = CreateNewObject(objType);
-			gobj.SetActive(bAutoSetActive);//
-			return gobj;
+			bobj = CreateNewObject(objType);
+			bobj.gameObject.SetActive(bAutoSetActive);//
+			return bobj;
 		}
 
 		//can overload this in subclasses
-		protected GameObject CreateNewObject(int objType)
+		protected BaseObject CreateNewObject(int objType)
 		{
 			Transform tr = null;
 
@@ -398,7 +400,7 @@ namespace mygame
 			if (tr != null)
 				tr.parent = GameObject.Find("Level").transform;
 
-			return tr.gameObject;
+			return tr.gameObject.GetComponent<BaseObject>();
 		}
 
 
@@ -480,29 +482,17 @@ namespace mygame
 			m_passedDistance += offset;
 
 			//check for objects that are left behind and will no longer be seen
-			int objType;
-			GameObject gobj;
+			BaseObject bobj;
 			int i = 0;
+			float camLeftX = camera.transform.localPosition.x - m_cameraHalfWidth;
 			while (i < m_objects.Count)
 			{
-				gobj = m_objects[i];
-				objType = gobj.GetComponent<BaseObject>().m_objType;
+				bobj = m_objects[i];
 
-				bool bPassedBy = false;
-
-				if (objType == Constants.OT_SPIKE)
-					bPassedBy = (gobj.GetComponent<SpriteRenderer>().bounds.max.x < camera.transform.localPosition.x - m_cameraHalfWidth);
-
-				else if (objType == Constants.OT_PLATFORM)
-					bPassedBy = (gobj.GetComponent<MeshRenderer>().bounds.max.x < camera.transform.localPosition.x - m_cameraHalfWidth);
-
-				else if (objType == Constants.OT_HOLE)
-					bPassedBy = (gobj.GetComponent<BoxCollider2D>().bounds.max.x < camera.transform.localPosition.x - m_cameraHalfWidth);
-
-				if (bPassedBy)
+				if (bobj.GetRightmostX() < camLeftX)
 				{
-					gobj.SetActive(false);
-					m_pool[gobj.GetComponent<BaseObject>().m_objType].Add(gobj);
+					bobj.gameObject.SetActive(false);
+					m_pool[bobj.m_objType].Add(bobj);
 					m_objects.RemoveAt(i);
 					continue;
 				}

@@ -7,15 +7,13 @@ namespace mygame
 	{
 		public int m_objType = 0;
 
-		/*
-		void Awake()
+		//the aabb right side x
+		public virtual float GetRightmostX()
 		{
+			return 0;
 		}
 
-		void Start()
-		{
-		}
-		
+		/*
 
 		//the object is put to object pool
 		public virtual void Deactivate()
@@ -27,12 +25,7 @@ namespace mygame
 		{
 			//reenable everything
 		}
+	*/
 
-		//the aabb right side x
-		public virtual float GetBiggestX()
-		{
-			return 0;
-		}
-*/
 	}
 }
