@@ -171,6 +171,13 @@ namespace mygame
 		public void SetState(int state)
 		{
 			m_gameState = state;
+
+			//pause anim
+			if (state == GSTATE_PAUSED)
+				Time.timeScale = 0;
+			else
+				Time.timeScale = 1;
+
 			GameObject.Find("CanvasHud").GetComponent<UserInterface>().ProcessNewGameState(m_gameState);
 		}
 
