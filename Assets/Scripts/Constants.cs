@@ -23,11 +23,11 @@ namespace mygame
 		public static readonly float BALL_SIZE_HALF = BALL_SIZE / 2.0f;
 
 		//object (prefabs) types
-		public static readonly int OT_PLATFORM = 1;
-		public static readonly int OT_SPIKE = 2;
-		public static readonly int OT_HOLE = 3;
+		public static readonly System.Type OT_PLATFORM = typeof(Platform);
+		public static readonly System.Type OT_SPIKE = typeof(Spike);
+		public static readonly System.Type OT_HOLE = typeof(Hole);
 
-		public static readonly int[] OBJECT_TYPES = { OT_PLATFORM, OT_SPIKE, OT_HOLE };
+		public static readonly System.Type[] OBJECT_TYPES = { OT_PLATFORM, OT_SPIKE, OT_HOLE };
 
 		//game params
 		public static readonly float SPEED_MIN = 2.0f;

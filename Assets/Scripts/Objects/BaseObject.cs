@@ -5,8 +5,6 @@ namespace mygame
 {
 	public class BaseObject : MonoBehaviour
 	{
-		public int m_objType = 0;
-
 		//the aabb right side x
 		public virtual float GetRightmostX()
 		{

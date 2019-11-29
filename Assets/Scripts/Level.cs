@@ -39,7 +39,7 @@ namespace mygame
 		protected float[] m_platYs = { 0, 0 };//top and bottom positions
 
 		//pool of released game objects: objecttype, array
-		protected Dictionary<int, List<BaseObject>> m_pool;
+		protected Dictionary<System.Type, List<BaseObject>> m_pool;
 
 		//active objects
 		protected List<BaseObject> m_objects;
@@ -87,7 +87,7 @@ namespace mygame
 			m_ball = GameObject.Find("Ball");
 			m_objects = new List<BaseObject>();
 
-			m_pool = new Dictionary<int, List<BaseObject>>();
+			m_pool = new Dictionary<System.Type, List<BaseObject>>();
 			int i;
 			for (i = 0; i < Constants.OBJECT_TYPES.Length; ++i)
 				m_pool[Constants.OBJECT_TYPES[i]] = new List<BaseObject>();
@@ -114,7 +114,7 @@ namespace mygame
 			while (m_objects.Count > 0)
 			{
 				m_objects[0].gameObject.SetActive(false);
-				m_pool[m_objects[0].m_objType].Add(m_objects[0]);
+				m_pool[m_objects[0].GetType()].Add(m_objects[0]);
 				m_objects.RemoveAt(0);
 			}			
 
@@ -230,7 +230,7 @@ namespace mygame
 			{
 				//if top block is deathly, make bottom black safe
 				if (ArrayUtility.Contains<int>(Constants.DEATHLY_BLOCKS, blockPage[0, col]))
-					blockPage[1, col] = Constants.OT_PLATFORM;
+					blockPage[1, col] = Constants.BT_PLATFORM;
 			}
 
 			//TestDumpPage(blockPage);
@@ -371,7 +371,7 @@ namespace mygame
 			}
 		}
 
-		protected BaseObject GetFreeObject(int objType, bool bAutoSetActive = true)
+		protected BaseObject GetFreeObject(System.Type objType, bool bAutoSetActive = true)
 		{
 			BaseObject bobj = null;
 
@@ -391,7 +391,7 @@ namespace mygame
 		}
 
 		//can overload this in subclasses
-		protected BaseObject CreateNewObject(int objType)
+		protected BaseObject CreateNewObject(System.Type objType)
 		{
 			Transform tr = null;
 
@@ -404,9 +404,10 @@ namespace mygame
 			else if (objType == Constants.OT_SPIKE)
 				tr = Instantiate(Globals.GetInstance().m_objSpike);
 
-			if (tr != null)
-				tr.parent = GameObject.Find("Level").transform;
+			else
+				return null;
 
+			tr.parent = GameObject.Find("Level").transform;
 			return tr.gameObject.GetComponent<BaseObject>();
 		}
 
@@ -499,7 +500,7 @@ namespace mygame
 				if (bobj.GetRightmostX() < camLeftX)
 				{
 					bobj.gameObject.SetActive(false);
-					m_pool[bobj.m_objType].Add(bobj);
+					m_pool[bobj.GetType()].Add(bobj);
 					m_objects.RemoveAt(i);
 					continue;
 				}
