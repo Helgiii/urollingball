@@ -173,10 +173,10 @@ namespace mygame
 			m_gameState = state;
 
 			//pause anim
-			if (state == GSTATE_PAUSED)
-				Time.timeScale = 0;
-			else
+			if (state == GSTATE_ON)
 				Time.timeScale = 1;
+			else
+				Time.timeScale = 0;
 
 			GameObject.Find("CanvasHud").GetComponent<UserInterface>().ProcessNewGameState(m_gameState);
 		}

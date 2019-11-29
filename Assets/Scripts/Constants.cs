@@ -30,10 +30,10 @@ namespace mygame
 		public static readonly int[] OBJECT_TYPES = { OT_PLATFORM, OT_SPIKE, OT_HOLE };
 
 		//game params
-		public const float SPEED_MIN = 2.0f;
-		public const float SPEED_MAX = 8.0f;//units per second
-		public const float DISTANCE_MAX = 200;//53 * 100 * 1;
-		public const float JUMP_DURATION_SLOW = 0.5f;//seconds
-		public const float JUMP_DURATION_FAST = 0.18f;
+		public static readonly float SPEED_MIN = 2.0f;
+		public static readonly float SPEED_MAX = 8.0f;//units per second
+		public static readonly float DISTANCE_MAX = 200;//53 * 100 * 1;
+		public static readonly float JUMP_DURATION_SLOW = 0.5f;//seconds
+		public static readonly float JUMP_DURATION_FAST = 0.18f;
 	}
 }
