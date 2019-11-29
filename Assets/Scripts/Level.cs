@@ -51,16 +51,18 @@ namespace mygame
 
 
 		//CONSTANTS
-		public static readonly int GSTATE_ON = 1;
-		public static readonly int GSTATE_FAILED = 2;
-		public static readonly int GSTATE_PAUSED = 3;
-		public static readonly int GSTATE_NONINIT = 4;
 
-
-		protected static readonly int BALLSTATE_UP = 1;
-		protected static readonly int BALLSTATE_DOWN = 2;
-		protected static readonly int BALLSTATE_MOVING_UP = 3;
-		protected static readonly int BALLSTATE_MOVING_DOWN = 4;
+		//we could use enums here, but it is hard to create child classes and add new states with them
+		public const int GSTATE_ON = 1;
+		public const int GSTATE_FAILED = 2;
+		public const int GSTATE_PAUSED = 3;
+		public const int GSTATE_NONINIT = 4;
+		//GSTATE_MAX = 5
+		
+		protected const int BALLSTATE_UP = 1;
+		protected const int BALLSTATE_DOWN = 2;
+		protected const int BALLSTATE_MOVING_UP = 3;
+		protected const int BALLSTATE_MOVING_DOWN = 4;
 
 
 		void Awake()
