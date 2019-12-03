@@ -18,6 +18,8 @@ namespace mygame
 		public const float BLOCK_HEIGHT = 0.5f;
 		public const float BLOCK_HEIGHT_HALF = BLOCK_HEIGHT / 2.0f;
 
+		//public const int OBJECT_MAX_BLOCKS = 5;
+
 		//ball
 		public const float BALL_SIZE = 1.0f;
 		public const float BALL_SIZE_HALF = BALL_SIZE / 2.0f;

@@ -14,7 +14,10 @@ namespace mygame
 
 		public override float GetRightmostX()
 		{
-			return m_collider.bounds.max.x;
+			//MeshRenderer mrend = GetComponentInChildren<MeshRenderer>();
+			//return mrend.bounds.max.x;
+
+			return transform.position.x + m_collider.bounds.extents.x;
 		}
 	}
 }
