@@ -12,8 +12,7 @@ namespace mygame
 		protected float m_cameraHalfHeight;
 		protected float m_cameraHalfWidth;
 
-		//2 rows: top and bottom
-		//current blocks we keep in memory
+		//2 rows: top and bottom, current blocks we keep in memory
 		protected List<int[]> m_blocks;
 		protected int m_firstBlockIndex;//index of m_blocks[0] on the worldblocks axis
 
@@ -44,7 +43,6 @@ namespace mygame
 		//collision detection
 		protected Vector2 m_castDir = new Vector2(1, 0);
 		protected Vector2 m_castOrigin = new Vector2();
-		//protected RaycastHit2D[] m_castResults = new RaycastHit2D[] { };
 
 
 		//CONSTANTS
@@ -91,7 +89,7 @@ namespace mygame
 			for (i = 0; i < Constants.OBJECT_TYPES.Length; ++i)
 				m_pool[Constants.OBJECT_TYPES[i]] = new List<BaseObject>();
 
-			//add one spike and get, store its size
+			//add one spike and store its size
 			BaseObject gobj = CreateNewObject(Constants.OT_SPIKE);
 			m_spikeWidth = gobj.GetComponent<SpriteRenderer>().bounds.size.x;
 			m_pool[Constants.OT_SPIKE].Add(gobj.GetComponent<BaseObject>());
@@ -99,10 +97,7 @@ namespace mygame
 
 		
 			m_blocks = new List<int[]>();
-			int cntBlocks = Mathf.CeilToInt((m_cameraHalfWidth * 2) / Constants.BLOCK_WIDTH);
-			//cntBlocks += Constants.OBJECT_MAX_BLOCKS;
-			cntBlocks *= 2;
-			//cntBlocks = 300;//
+			int cntBlocks = Mathf.CeilToInt((m_cameraHalfWidth * 2) / Constants.BLOCK_WIDTH) + Constants.OBJECT_MAX_BLOCKS*2;
 
 			for (i=0; i<cntBlocks; ++i)
 				m_blocks.Add( new int[2]{0,0} );
@@ -124,7 +119,7 @@ namespace mygame
 				m_objects.RemoveAt(0);
 			}
 
-			//release all blocks too
+			//clear all blocks
 			for (row = 0; row < 2; ++row)
 			for (col = 0; col < m_blocks.Count; ++col)
 				m_blocks[col][row] = 0;
@@ -227,9 +222,9 @@ namespace mygame
 
 		protected int TryGenerateBlocks()
 		{
-			int row, col, blockType;
+			int col, blockType;
 
-			//find first 0 blocks on top and bottom rows
+			//find first 0 block on top row
 			int startIndice = -1;
 			for (col = 0; col < m_blocks.Count; ++col)
 			{
@@ -242,19 +237,16 @@ namespace mygame
 
 			if (startIndice == -1)
 				return -1;
-
-			//check for a 1block small area, prolong it;
-
+			
 			//generate top blocks instead of empty ones
-			//int[] blockTypes = { Constants.BT_PLATFORM, Constants.BT_SPIKES, Constants.BT_HOLE };
 			int camRightBlockI = Mathf.CeilToInt((Camera.main.transform.position.x + m_cameraHalfWidth) / Constants.BLOCK_WIDTH);
-
-			col = startIndice;
 			int rowDanger, rowSafe;
+			col = startIndice;
 			while (col < m_blocks.Count && m_firstBlockIndex + col <= camRightBlockI)
 			{
-				int blockCnt = Random.Range(2, 3);
+				int blockCnt = Random.Range(2, Constants.OBJECT_MAX_BLOCKS);
 
+				//decide where to put danger and safe block
 				if (Random.Range(0.0f, 1.0f)> 0.5f)
 				{
 					rowDanger = 0;
@@ -288,8 +280,6 @@ namespace mygame
 
 		protected void TryGenerateObjects(int startIndice)
 		{
-			//Debug.Log("generate objs for indices: " + startIndices[0].ToString() + " " + startIndices[1].ToString());
-
 			if (startIndice == -1)
 				return;
 
@@ -300,7 +290,6 @@ namespace mygame
 			//create platforms
 			//we consider spikes blocks as platforms too, so we merge the nearby spikes and platforms
 			//to get one large common platform
-			//refactor?: we could add optimization here and try prolonging a platform from previous page
 			for (row = 0; row < 2; ++row)
 			{
 				startIndex = -1;
@@ -407,7 +396,7 @@ namespace mygame
 				int cnt = Mathf.FloorToInt(blGroupWidth / m_spikeWidth);
 				float spikesPadding = (blGroupWidth - cnt * m_spikeWidth) / 2.0f;
 
-				//create spikes collider
+				//create spikess
 				int i;
 				for (i = 0; i < cnt; ++i)
 				{
@@ -434,13 +423,9 @@ namespace mygame
 			}
 		}
 
-		//static int sNameCounter = 0;
-
 		protected BaseObject GetFreeObject(System.Type objType, bool bAutoSetActive = true)
 		{
 			BaseObject bobj = null;
-
-			//sNameCounter++;
 
 			if (m_pool[objType].Count > 0)
 			{
@@ -448,14 +433,12 @@ namespace mygame
 				bobj = m_pool[objType][0];
 				m_pool[objType].RemoveAt(0);
 				bobj.gameObject.SetActive(bAutoSetActive);
-				//bobj.name = "Obj" + sNameCounter.ToString();
 				return bobj;
 			}
 
 			//create a new obj since we dont have enough free ones
 			bobj = CreateNewObject(objType);
 			bobj.gameObject.SetActive(bAutoSetActive);//
-			//bobj.name = "Obj" + sNameCounter.ToString();
 			return bobj;
 		}
 
@@ -480,21 +463,6 @@ namespace mygame
 			return tr.gameObject.GetComponent<BaseObject>();
 		}
 
-		/*
-		protected bool TestCheckBlocksPlayble()
-		{
-			int col;
-			for (col=0; col<m_blocks.Count; ++col)
-			{
-				if (ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][0])
-					&& ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][1]))
-				{
-					return false;
-				}
-			}
-			return true;
-		}
-		*/
 
 		protected void Update()
 		{
@@ -521,9 +489,8 @@ namespace mygame
 			//speed = Constants.SPEED_MAX;
 			//jumpDuration = Constants.JUMP_DURATION_FAST;
 
-			float offset = Time.fixedDeltaTime * speed;
-			//float offset = Time.deltaTime * speed;
-
+			float dt = Time.fixedDeltaTime;
+			float offset = dt * speed;
 
 			//check if we have hit some object while moving camera 
 			m_castOrigin.x = m_ball.transform.position.x;
@@ -534,7 +501,6 @@ namespace mygame
 				//tune/fix position of the ball so that we dont penetrate the object visually
 				Debug.Log("hit object: " + hit.collider.attachedRigidbody.gameObject.name);
 
-				//stop the game
 				OnHitDanger();
 				return;
 			}
@@ -556,12 +522,11 @@ namespace mygame
 			//calc new ball y
 			if (m_ballState == BALLSTATE_MOVING_DOWN)
 			{
-				m_ballMotionTimer += Time.deltaTime;
+				m_ballMotionTimer += dt;
 				if (m_ballMotionTimer >= jumpDuration)
 				{
-					int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 1);
-					m_jumpDangerScores += Mathf.Min(blocksTillDanger, 5);
-					AddScores(12 - m_jumpDangerScores);
+					m_jumpDangerScores += CalcDangerScores(CalcBallBlockIndex(), 1);
+					AddScores(m_jumpDangerScores);
 
 					pos.y = m_ballBottomY;
 					m_ballMotionTimer = 0.0f;
@@ -572,12 +537,11 @@ namespace mygame
 			}
 			else if (m_ballState == BALLSTATE_MOVING_UP)
 			{
-				m_ballMotionTimer += Time.deltaTime;
+				m_ballMotionTimer += dt;
 				if (m_ballMotionTimer >= jumpDuration)
 				{
-					int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 0);
-					m_jumpDangerScores += Mathf.Min(blocksTillDanger, 5);
-					AddScores(12 - m_jumpDangerScores);
+					m_jumpDangerScores += CalcDangerScores(CalcBallBlockIndex(), 0);
+					AddScores(m_jumpDangerScores);
 
 					pos.y = m_ballTopY;
 					m_ballMotionTimer = 0.0f;
@@ -618,14 +582,12 @@ namespace mygame
 
 			if (m_ballState == BALLSTATE_DOWN)
 			{
-				int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 1);
-				m_jumpDangerScores = Mathf.Min(blocksTillDanger, 5);
+				m_jumpDangerScores = CalcDangerScores(CalcBallBlockIndex(), 1);
 				m_ballState = BALLSTATE_MOVING_UP;
 			}
 			else if (m_ballState == BALLSTATE_UP)
 			{
-				int blocksTillDanger = CalcBlocksTillDanger(CalcBallBlockIndex(), 0);
-				m_jumpDangerScores = Mathf.Min(blocksTillDanger, 5);
+				m_jumpDangerScores = CalcDangerScores(CalcBallBlockIndex(), 0);
 				m_ballState = BALLSTATE_MOVING_DOWN;
 			}
 		}
@@ -633,45 +595,26 @@ namespace mygame
 		//this could be bigger than 1 page, since we have 2 pages and are moving fast
 		int CalcBallBlockIndex()
 		{
-			return 0;
+			int blockIndex = Mathf.FloorToInt(m_ball.transform.position.x / Constants.BLOCK_WIDTH) - m_firstBlockIndex;
 
-			//float pos = m_ball.transform.position.x - (m_blockPageIndex * m_colsInPage * Constants.BLOCK_WIDTH);
-			//int blockIndex = Mathf.FloorToInt(pos / Constants.BLOCK_WIDTH);
-			////Debug.Assert(blockIndex < m_colsInPage*2);
-			////Debug.Log(blockIndex.ToString());
-			//return blockIndex;
+			//Debug.Log(blockIndex.ToString());
+			return blockIndex;
 		}
 
-
 		//if no danger found returns blockcnt to the end of the 2pages
-		int CalcBlocksTillDanger(int startingIndex, int row)
+		int CalcDangerScores(int startingIndex, int row)
 		{
+			for (int col = startingIndex; col < m_blocks.Count; ++col)
+			{
+				if (ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][row]))
+				{
+					int dist = col - startingIndex;
+					if (dist > 5)
+						return 0;
+					return 6 - dist;
+				}
+			}
 			return 0;
-
-			////looks in both our pages
-			//List<int[,]> pages = new List<int[,]>();
-			//pages.Add(m_blockPage);
-			//pages.Add(m_blockPageNext);
-
-			//int i, col, colThrough;
-			//int blockType;
-			//int cnt = colThrough = 0;
-			//for (i=0; i<pages.Count; ++i)
-			//{
-			//	for (col = 0; col<m_colsInPage; ++col, ++colThrough)
-			//	{
-			//		if (colThrough < startingIndex)
-			//			continue;
-
-			//		cnt++;
-
-			//		blockType = pages[i][row, col];
-			//		if (ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, blockType))
-			//			return cnt;
-			//	}
-			//}
-
-			//return cnt;//0
 		}
 
 		void UpdateHud()
@@ -689,7 +632,7 @@ namespace mygame
 			if (scores == 0)
 				return;
 
-			//Debug.Log("scores added: " + scores.ToString());
+			Debug.Log("scores added: " + scores.ToString());
 			m_scores += scores;
 
 			UpdateHud();
@@ -712,5 +655,22 @@ namespace mygame
 				Debug.Log(txt);
 			}
 		}
+
+
+		/*
+		protected bool TestCheckBlocksPlayble()
+		{
+			int col;
+			for (col=0; col<m_blocks.Count; ++col)
+			{
+				if (ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][0])
+					&& ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][1]))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		*/
 	}
 }
