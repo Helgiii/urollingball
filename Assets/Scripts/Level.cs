@@ -298,13 +298,13 @@ namespace mygame
 				{
 					blockType = m_blocks[col][row];
 
-					int dangerIndex = Array.IndexOf<int>(Constants.DEATHLY_BLOCKS, blockType);
-					if (startIndex == -1 && dangerIndex!=-1)
+					int platIndex = Array.IndexOf<int>(Constants.PLATFORM_BLOCKS, blockType);
+					if (startIndex == -1 && platIndex != -1)
 						startIndex = col;
 
 					if (startIndex >= 0)
 					{
-						if (dangerIndex==-1)
+						if (platIndex == -1)
 						{
 							BlockSeqToObjects(Constants.BT_PLATFORM, col - startIndex, m_firstBlockIndex + startIndex, row);
 							startIndex = -1;

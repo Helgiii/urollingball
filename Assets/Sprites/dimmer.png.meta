@@ -1,22 +1,7 @@
 fileFormatVersion: 2
-guid: 3fd822bdc04f84f40be3a111a7617e74
+guid: 28131abb0b69aaf44a358d4d828e7a7d
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -7600441579368616308
-    second: ball
-  - first:
-      213: 1753205982242350755
-    second: Ball
-  - first:
-      213: 318953615281452700
-    second: Spike
-  - first:
-      213: 1786246863626547964
-    second: Pause
-  - first:
-      213: 5446187312904272412
-    second: dimmer
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -46,7 +31,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -55,14 +40,14 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -123,77 +108,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Ball
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 192
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7d785ab0d50c72c49a974007c9342d00
-      internalID: 1753205982242350755
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Spike
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 203
-        width: 48
-        height: 53
-      alignment: 2
-      pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape:
-      - - {x: -24, y: 26.5}
-        - {x: 1, y: -25.5}
-        - {x: 24, y: 26.5}
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5f4fd53d95d005b4182b1103d23ee439
-      internalID: 318953615281452700
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pause
-      rect:
-        serializedVersion: 2
-        x: 112
-        y: 184
-        width: 72
-        height: 72
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 1, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f63f34ad58a5c0748a227679684542a7
-      internalID: 1786246863626547964
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 698325d6daf3c7c4fa8215ff82563055
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
