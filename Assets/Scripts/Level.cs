@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEditor;
+using System;
 
 namespace mygame
 {
@@ -237,6 +236,8 @@ namespace mygame
 
 			if (startIndice == -1)
 				return -1;
+
+			Globals globs = Globals.GetInstance();
 			
 			//generate top blocks instead of empty ones
 			int camRightBlockI = Mathf.CeilToInt((Camera.main.transform.position.x + m_cameraHalfWidth) / Constants.BLOCK_WIDTH);
@@ -244,10 +245,10 @@ namespace mygame
 			col = startIndice;
 			while (col < m_blocks.Count && m_firstBlockIndex + col <= camRightBlockI)
 			{
-				int blockCnt = Random.Range(2, Constants.OBJECT_MAX_BLOCKS);
+				int blockCnt = globs.m_random.Next(2, Constants.OBJECT_MAX_BLOCKS+1);
 
 				//decide where to put danger and safe block
-				if (Random.Range(0.0f, 1.0f)> 0.5f)
+				if (globs.m_random.NextDouble() > 0.5d)
 				{
 					rowDanger = 0;
 					rowSafe = 1;
@@ -259,7 +260,7 @@ namespace mygame
 				}
 
 				//create blocks
-				blockType = Constants.DEATHLY_BLOCKS[Random.Range(0, Constants.DEATHLY_BLOCKS.Length)];
+				blockType = Constants.DEATHLY_BLOCKS[globs.m_random.Next(0, Constants.DEATHLY_BLOCKS.Length)];
 
 				int max = Mathf.Min(col + blockCnt, m_blocks.Count);
 				for (int k = col; k < max; ++k)
@@ -296,13 +297,14 @@ namespace mygame
 				for (col = startIndice; col < m_blocks.Count; ++col)
 				{
 					blockType = m_blocks[col][row];
-					bool bNeedsPlat = ArrayUtility.Contains(Constants.PLATFORM_BLOCKS, blockType);
-					if (startIndex == -1 && bNeedsPlat)
+
+					int dangerIndex = Array.IndexOf<int>(Constants.DEATHLY_BLOCKS, blockType);
+					if (startIndex == -1 && dangerIndex!=-1)
 						startIndex = col;
 
 					if (startIndex >= 0)
 					{
-						if (!bNeedsPlat)
+						if (dangerIndex==-1)
 						{
 							BlockSeqToObjects(Constants.BT_PLATFORM, col - startIndex, m_firstBlockIndex + startIndex, row);
 							startIndex = -1;
@@ -606,7 +608,9 @@ namespace mygame
 		{
 			for (int col = startingIndex; col < m_blocks.Count; ++col)
 			{
-				if (ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][row]))
+				int blockType = m_blocks[col][row];
+				int index = Array.IndexOf<int>(Constants.DEATHLY_BLOCKS, blockType);
+				if (index >=0)
 				{
 					int dist = col - startingIndex;
 					if (dist > 5)

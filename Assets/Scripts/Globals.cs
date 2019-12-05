@@ -1,5 +1,5 @@
 using UnityEngine;
-//using UnityEngine.UI;
+using System;
 using System.Collections.Generic;
 
 namespace mygame
@@ -21,6 +21,8 @@ namespace mygame
 		public int m_maxDistance = 0;
 		public int m_maxScores = 0;
 
+		public System.Random m_random;
+
 		void Awake()
 		{
 			if (instance != null && instance != this)
@@ -29,13 +31,17 @@ namespace mygame
 				return;
 			}
 
+			InitOnce();
+
 			instance = this;
 			DontDestroyOnLoad(this.gameObject);
 		}
 
-		void Start()
+		void InitOnce()
 		{
+			m_random = new System.Random(DateTime.Now.Millisecond);
 		}
+
 	}
 
 }

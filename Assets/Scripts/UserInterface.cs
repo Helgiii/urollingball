@@ -14,14 +14,13 @@ namespace mygame
 
 		protected Level m_lvl = null;
 
-
 		// Normal raycasts do not work on UI elements, they require a special kind
-		GraphicRaycaster raycaster;
+		GraphicRaycaster m_raycaster;
 
 		void Awake()
 		{
 			// Get both of the components we need to do this
-			this.raycaster = GetComponent<GraphicRaycaster>();
+			m_raycaster = GetComponent<GraphicRaycaster>();
 		}
 
 		void Update()
@@ -35,7 +34,7 @@ namespace mygame
 
 				//Raycast using the Graphics Raycaster and mouse click position
 				pointerData.position = Input.mousePosition;
-				this.raycaster.Raycast(pointerData, results);
+				m_raycaster.Raycast(pointerData, results);
 
 				//For every result returned, output the name of the GameObject on the Canvas hit by the Ray
 				//foreach (RaycastResult result in results)
