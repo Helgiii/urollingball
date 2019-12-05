@@ -471,14 +471,6 @@ namespace mygame
 			if (m_gameState != GSTATE_ON)
 				return;
 
-			UpdateHud();
-		}
-
-		private void FixedUpdate()
-		{
-			//physics should not depend on framerate
-			if (m_gameState != GSTATE_ON)
-				return;
 
 			//calc current motion speed based on distance passed
 			float distanceProgress = m_passedDistance / Constants.DISTANCE_MAX;
@@ -491,7 +483,7 @@ namespace mygame
 			//speed = Constants.SPEED_MAX;
 			//jumpDuration = Constants.JUMP_DURATION_FAST;
 
-			float dt = Time.fixedDeltaTime;
+			float dt = Time.deltaTime;
 			float offset = dt * speed;
 
 			//check if we have hit some object while moving camera 
@@ -575,6 +567,8 @@ namespace mygame
 
 				++i;
 			}
+
+			UpdateHud();
 		}
 
 		public void TryJump()
@@ -636,7 +630,7 @@ namespace mygame
 			if (scores == 0)
 				return;
 
-			Debug.Log("scores added: " + scores.ToString());
+			//Debug.Log("scores added: " + scores.ToString());
 			m_scores += scores;
 
 			UpdateHud();
