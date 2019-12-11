@@ -663,8 +663,8 @@ namespace mygame
 			int col;
 			for (col=0; col<m_blocks.Count; ++col)
 			{
-				if (ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][0])
-					&& ArrayUtility.Contains(Constants.DEATHLY_BLOCKS, m_blocks[col][1]))
+				if (Array.IndexOf<int>(Constants.DEATHLY_BLOCKS, m_blocks[col][0]) != -1
+					&& Array.IndexOf<int>(Constants.DEATHLY_BLOCKS, m_blocks[col][1]) != -1)
 				{
 					return false;
 				}

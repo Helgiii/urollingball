@@ -15,7 +15,7 @@ namespace mygame
 		public Level m_lvl = null;
 
 		// Normal raycasts do not work on UI elements, they require a special kind
-		GraphicRaycaster m_raycaster;
+		protected GraphicRaycaster m_raycaster;
 
 		void Awake()
 		{
