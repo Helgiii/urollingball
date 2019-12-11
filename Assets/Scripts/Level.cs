@@ -38,6 +38,7 @@ namespace mygame
 
 		//active objects
 		protected List<BaseObject> m_objects;
+		protected Prefabs m_prefabs;
 
 		//collision detection
 		protected Vector2 m_castDir = new Vector2(1, 0);
@@ -87,6 +88,8 @@ namespace mygame
 			int i;
 			for (i = 0; i < Constants.OBJECT_TYPES.Length; ++i)
 				m_pool[Constants.OBJECT_TYPES[i]] = new List<BaseObject>();
+
+			m_prefabs = gameObject.GetComponent<Prefabs>();
 
 			//add one spike and store its size
 			BaseObject gobj = CreateNewObject(Constants.OT_SPIKE);
@@ -158,7 +161,7 @@ namespace mygame
 			//Debug.Log("hit something");
 			//Debug.Log("distance passed: " + m_passedDistance.ToString());
 
-			Globals globs = Globals.GetInstance();
+			Globals globs = Globals.Instance;
 
 			if (m_scores > globs.m_maxScores)
 				globs.m_maxScores = m_scores;
@@ -237,7 +240,7 @@ namespace mygame
 			if (startIndice == -1)
 				return -1;
 
-			Globals globs = Globals.GetInstance();
+			Globals globs = Globals.Instance;
 			
 			//generate top blocks instead of empty ones
 			int camRightBlockI = Mathf.CeilToInt((Camera.main.transform.position.x + m_cameraHalfWidth) / Constants.BLOCK_WIDTH);
@@ -450,13 +453,13 @@ namespace mygame
 			Transform tr = null;
 
 			if (objType == Constants.OT_PLATFORM)
-				tr = Instantiate(Globals.GetInstance().m_objPlatform);
+				tr = Instantiate(m_prefabs.m_objPlatform);
 
 			else if (objType == Constants.OT_HOLE)
-				tr = Instantiate(Globals.GetInstance().m_objHole);
+				tr = Instantiate(m_prefabs.m_objHole);
 
 			else if (objType == Constants.OT_SPIKE)
-				tr = Instantiate(Globals.GetInstance().m_objSpike);
+				tr = Instantiate(m_prefabs.m_objSpike);
 
 			else
 				return null;

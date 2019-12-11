@@ -109,8 +109,8 @@ namespace mygame
 				//set new values
 				GameObject.Find("txtDistance").GetComponent<Text>().text = m_lvl.GetDistanceInt().ToString();
 				GameObject.Find("txtScores").GetComponent<Text>().text = m_lvl.GetScores().ToString();
-				GameObject.Find("txtDistanceMax").GetComponent<Text>().text = Globals.GetInstance().m_maxDistance.ToString();
-				GameObject.Find("txtScoresMax").GetComponent<Text>().text = Globals.GetInstance().m_maxScores.ToString();
+				GameObject.Find("txtDistanceMax").GetComponent<Text>().text = Globals.Instance.m_maxDistance.ToString();
+				GameObject.Find("txtScoresMax").GetComponent<Text>().text = Globals.Instance.m_maxScores.ToString();
 			}
 			else if (gstate == Level.GSTATE_PAUSED)
 			{
