@@ -62,7 +62,6 @@ namespace mygame
 
 		void Awake()
 		{
-			GameObject.Find("CanvasHud").GetComponent<UserInterface>().SetLevel(this);
 
 			//Physics2D.alwaysShowColliders = true;
 

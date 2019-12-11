@@ -12,7 +12,7 @@ namespace mygame
 		public Transform m_scrIngame = null;
 		public Transform m_scrDeath = null;
 
-		protected Level m_lvl = null;
+		public Level m_lvl = null;
 
 		// Normal raycasts do not work on UI elements, they require a special kind
 		GraphicRaycaster m_raycaster;
@@ -26,6 +26,7 @@ namespace mygame
 		void Update()
 		{
 			//Check if the left Mouse button is clicked
+			//jump on any click outside gui elements
 			if (Input.GetKeyDown(KeyCode.Mouse0))
 			{
 				//Set up the new Pointer Event
@@ -48,16 +49,9 @@ namespace mygame
 		}
 
 
-		public void SetLevel(Level lvl) { m_lvl = lvl;  }
 
 		public void HideAllScreens()
 		{
-			//foreach (Transform child in transform)
-			//{
-			//	//child is your child transform
-			//	child.gameObject.SetActive(false);
-			//}
-
 			m_scrNoninit.gameObject.SetActive(false);
 			m_scrPause.gameObject.SetActive(false);
 			m_scrIngame.gameObject.SetActive(false);
@@ -107,10 +101,10 @@ namespace mygame
 				m_scrDeath.gameObject.SetActive(true);
 
 				//set new values
-				GameObject.Find("txtDistance").GetComponent<Text>().text = m_lvl.GetDistanceInt().ToString();
-				GameObject.Find("txtScores").GetComponent<Text>().text = m_lvl.GetScores().ToString();
-				GameObject.Find("txtDistanceMax").GetComponent<Text>().text = Globals.Instance.m_maxDistance.ToString();
-				GameObject.Find("txtScoresMax").GetComponent<Text>().text = Globals.Instance.m_maxScores.ToString();
+				m_scrDeath.Find("txtDistance").GetComponent<Text>().text = m_lvl.GetDistanceInt().ToString();
+				m_scrDeath.Find("txtScores").GetComponent<Text>().text = m_lvl.GetScores().ToString();
+				m_scrDeath.Find("txtDistanceMax").GetComponent<Text>().text = Globals.Instance.m_maxDistance.ToString();
+				m_scrDeath.Find("txtScoresMax").GetComponent<Text>().text = Globals.Instance.m_maxScores.ToString();
 			}
 			else if (gstate == Level.GSTATE_PAUSED)
 			{
@@ -124,8 +118,8 @@ namespace mygame
 			int lvlState = m_lvl.GetState();
 			if (lvlState == Level.GSTATE_ON || lvlState == Level.GSTATE_PAUSED)
 			{
-				GameObject.Find("txtScores").GetComponent<Text>().text = m_lvl.GetScores().ToString();
-				GameObject.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(m_lvl.GetDistanceInt()).ToString();
+				m_scrIngame.Find("txtScores").GetComponent<Text>().text = m_lvl.GetScores().ToString();
+				m_scrIngame.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(m_lvl.GetDistanceInt()).ToString();
 			}
 		}
 	}
