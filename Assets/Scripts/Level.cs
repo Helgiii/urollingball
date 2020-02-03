@@ -6,8 +6,8 @@ namespace mygame
 {
 	public class Level : MonoBehaviour
 	{
-		int _gameState = GSTATE_NONINIT;
-		public int gameState
+		GameState _gameState = GameState.NonInit;
+		public GameState gameState
 		{
 			get { return _gameState; }
 			set
@@ -15,12 +15,12 @@ namespace mygame
 				_gameState = value;
 
 				// Pause anim (all updates)
-				Time.timeScale = (_gameState == GSTATE_ON) ? 1 : 0;
+				Time.timeScale = (_gameState == GameState.On) ? 1 : 0;
 
 				GameObject.Find("CanvasHud").GetComponent<UserInterface>().ProcessNewGameState(_gameState);
 			}
 		}
-		
+
 
 		protected float cameraHalfHeight;
 		protected float cameraHalfWidth;
@@ -34,7 +34,7 @@ namespace mygame
 		protected float passedDistance = 0.0f;
 
 		public int scores { get; private set; } = 0;
-		
+
 		// Width in world units
 		protected int jumpDangerScores;
 
@@ -43,7 +43,7 @@ namespace mygame
 		protected GameObject ball;
 		protected float ballTopY;
 		protected float ballBottomY;
-		protected int ballState;
+		protected BallState ballState;
 		protected float ballMotionTimer;
 
 		protected float spikeWidth;
@@ -67,18 +67,21 @@ namespace mygame
 
 		// CONSTANTS
 
-		// We could use enums here, but it is hard to create child classes and add new states with them
-		public const int GSTATE_ON = 1;
-		public const int GSTATE_FAILED = 2;
-		public const int GSTATE_PAUSED = 3;
-		public const int GSTATE_NONINIT = 4;
-		//GSTATE_MAX = 5
+		public enum GameState
+		{
+			On = 1,
+			Failed,
+			Paused,
+			NonInit
+		}
 		
-		protected const int BALLSTATE_UP = 1;
-		protected const int BALLSTATE_DOWN = 2;
-		protected const int BALLSTATE_MOVING_UP = 3;
-		protected const int BALLSTATE_MOVING_DOWN = 4;
-
+		public enum BallState
+		{
+			Up = 1,
+			Down,
+			MovingUp,
+			MovingDown
+		}
 
 		void Awake()
 		{
@@ -123,7 +126,7 @@ namespace mygame
 				blocks.Add( new BlockType[2]{0,0} );
 			
 			ReinitLevel();
-			gameState = GSTATE_NONINIT;
+			gameState = GameState.NonInit;
 		}
 
 
@@ -164,7 +167,7 @@ namespace mygame
 
 			// Ball
 			ball.transform.position = new Vector3(GetBallXFromCamera(cam), ballBottomY, 0);
-			ballState = BALLSTATE_DOWN;
+			ballState = BallState.Down;
 			ballMotionTimer = 0.0f;
 			ball.GetComponent<TrailRenderer>().Clear(); 
 
@@ -186,7 +189,7 @@ namespace mygame
 			if (dist > globs.maxDistance)
 				globs.maxDistance = dist;
 
-			gameState = GSTATE_FAILED;
+			gameState = GameState.Failed;
 		}
 
 
@@ -474,7 +477,7 @@ namespace mygame
 
 		protected void Update()
 		{
-			if (gameState != GSTATE_ON)
+			if (gameState != GameState.On)
 				return;
 
 
@@ -520,7 +523,7 @@ namespace mygame
 			pos.x = GetBallXFromCamera(camera);
 
 			// Calc new ball y
-			if (ballState == BALLSTATE_MOVING_DOWN)
+			if (ballState == BallState.MovingDown)
 			{
 				ballMotionTimer += dt;
 				if (ballMotionTimer >= jumpDuration)
@@ -530,12 +533,12 @@ namespace mygame
 
 					pos.y = ballBottomY;
 					ballMotionTimer = 0.0f;
-					ballState = BALLSTATE_DOWN;
+					ballState = BallState.Down;
 				}
 				else
 					pos.y = ballTopY + (ballBottomY - ballTopY) * (ballMotionTimer / jumpDuration);
 			}
-			else if (ballState == BALLSTATE_MOVING_UP)
+			else if (ballState == BallState.MovingUp)
 			{
 				ballMotionTimer += dt;
 				if (ballMotionTimer >= jumpDuration)
@@ -545,7 +548,7 @@ namespace mygame
 
 					pos.y = ballTopY;
 					ballMotionTimer = 0.0f;
-					ballState = BALLSTATE_UP;
+					ballState = BallState.Up;
 				}
 				else
 					pos.y = ballBottomY + (ballTopY - ballBottomY) * (ballMotionTimer / jumpDuration);
@@ -579,18 +582,18 @@ namespace mygame
 
 		public void TryJump()
 		{
-			if (gameState != GSTATE_ON)
+			if (gameState != GameState.On)
 				return;
 
-			if (ballState == BALLSTATE_DOWN)
+			if (ballState == BallState.Down)
 			{
 				jumpDangerScores = CalcDangerScores(CalcBallBlockIndex(), 1);
-				ballState = BALLSTATE_MOVING_UP;
+				ballState = BallState.MovingUp;
 			}
-			else if (ballState == BALLSTATE_UP)
+			else if (ballState == BallState.Up)
 			{
 				jumpDangerScores = CalcDangerScores(CalcBallBlockIndex(), 0);
-				ballState = BALLSTATE_MOVING_DOWN;
+				ballState = BallState.MovingDown;
 			}
 		}
 

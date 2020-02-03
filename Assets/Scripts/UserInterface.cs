@@ -60,43 +60,43 @@ namespace mygame
 
 		public void OnBtnStart()
 		{
-			lvl.gameState = Level.GSTATE_ON;
+			lvl.gameState = Level.GameState.On;
 		}
 
 		public void OnBtnPause()
 		{
-			if (lvl.gameState == Level.GSTATE_ON)
-				lvl.gameState = Level.GSTATE_PAUSED;
+			if (lvl.gameState == Level.GameState.On)
+				lvl.gameState = Level.GameState.Paused;
 		}
 
 		public void OnBtnContinue()
 		{
-			if (lvl.gameState == Level.GSTATE_PAUSED)
-				lvl.gameState = Level.GSTATE_ON;
+			if (lvl.gameState == Level.GameState.Paused)
+				lvl.gameState = Level.GameState.On;
 		}
 
 		public void OnBtnPlayAgain()
 		{
-			if (lvl.gameState != Level.GSTATE_FAILED)
+			if (lvl.gameState != Level.GameState.Failed)
 				return;
 
 			lvl.ReinitLevel();
-			lvl.gameState = Level.GSTATE_ON;
+			lvl.gameState = Level.GameState.On;
 		}
 
-		public void ProcessNewGameState(int gstate)
+		public void ProcessNewGameState(Level.GameState gstate)
 		{
 			HideAllScreens();
 
-			if (gstate == Level.GSTATE_NONINIT)
+			if (gstate == Level.GameState.NonInit)
 			{
 				scrNoninit.gameObject.SetActive(true);
 			}
-			else if (gstate == Level.GSTATE_ON)
+			else if (gstate == Level.GameState.On)
 			{
 				scrIngame.gameObject.SetActive(true);
 			}
-			else if (gstate == Level.GSTATE_FAILED)
+			else if (gstate == Level.GameState.Failed)
 			{
 				scrDeath.gameObject.SetActive(true);
 
@@ -106,7 +106,7 @@ namespace mygame
 				scrDeath.Find("txtDistanceMax").GetComponent<Text>().text = Globals.Instance.maxDistance.ToString();
 				scrDeath.Find("txtScoresMax").GetComponent<Text>().text = Globals.Instance.maxScores.ToString();
 			}
-			else if (gstate == Level.GSTATE_PAUSED)
+			else if (gstate == Level.GameState.Paused)
 			{
 				scrIngame.gameObject.SetActive(true);
 				scrPause.gameObject.SetActive(true);
@@ -115,8 +115,8 @@ namespace mygame
 
 		public void UpdateHud()
 		{
-			int lvlState = lvl.gameState;
-			if (lvlState == Level.GSTATE_ON || lvlState == Level.GSTATE_PAUSED)
+			Level.GameState lvlState = lvl.gameState;
+			if (lvlState == Level.GameState.On || lvlState == Level.GameState.Paused)
 			{
 				scrIngame.Find("txtScores").GetComponent<Text>().text = lvl.scores.ToString();
 				scrIngame.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(lvl.GetDistanceInt()).ToString();
