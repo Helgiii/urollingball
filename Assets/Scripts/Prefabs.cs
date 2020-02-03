@@ -6,9 +6,9 @@ namespace mygame
 {
 	public class Prefabs : MonoBehaviour
 	{
-		//prefabs
-		public Transform m_objPlatform = null;
-		public Transform m_objSpike = null;
-		public Transform m_objHole = null;
+		// Prefabs
+		public Transform objPlatform = null;
+		public Transform objSpike = null;
+		public Transform objHole = null;
 	}
 }

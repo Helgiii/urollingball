@@ -5,16 +5,16 @@ namespace mygame
 {
 	public class Spike : BaseObject
 	{
-		SpriteRenderer m_renderer;
+		SpriteRenderer sprRenderer;
 
 		void Awake()
 		{
-			m_renderer = gameObject.GetComponent<SpriteRenderer>();
+			sprRenderer = gameObject.GetComponent<SpriteRenderer>();
 		}
 
 		public override float GetRightmostX()
 		{
-			return m_renderer.bounds.max.x;
+			return sprRenderer.bounds.max.x;
 		}
 	}
 }

@@ -5,11 +5,11 @@ namespace mygame
 {
 	public class Hole : BaseObject
 	{
-		BoxCollider2D m_collider;
+		BoxCollider2D boxCollider;
 
 		private void Awake()
 		{
-			m_collider = gameObject.GetComponent<BoxCollider2D>();
+			boxCollider = gameObject.GetComponent<BoxCollider2D>();
 		}
 
 		public override float GetRightmostX()
@@ -17,7 +17,7 @@ namespace mygame
 			//MeshRenderer mrend = GetComponentInChildren<MeshRenderer>();
 			//return mrend.bounds.max.x;
 
-			return transform.position.x + m_collider.bounds.extents.x;
+			return transform.position.x + boxCollider.bounds.extents.x;
 		}
 	}
 }

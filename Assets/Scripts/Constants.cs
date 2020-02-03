@@ -2,16 +2,21 @@ using UnityEngine;
 
 namespace mygame
 {
+
+	// Block types
+	public enum BlockType
+	{
+		None = 0,
+		Platform,
+		Spikes,
+		Hole
+	}
+
 	public class Constants
 	{
-		//block types
-		public const int BT_PLATFORM = 1;
-		public const int BT_SPIKES = 2;
-		public const int BT_HOLE = 3;
-
-		//groups of block types
-		public static readonly int[] DEATHLY_BLOCKS = { BT_HOLE, BT_SPIKES };
-		public static readonly int[] PLATFORM_BLOCKS = { BT_PLATFORM, BT_SPIKES };
+		// Groups of block types
+		public static readonly BlockType[] DEATHLY_BLOCKS = { BlockType.Hole, BlockType.Spikes };
+		public static readonly BlockType[] PLATFORM_BLOCKS = { BlockType.Platform, BlockType.Spikes };
 
 		public const float BLOCK_WIDTH = 1.0f;//0.5F;
 		public const float BLOCK_WIDTH_HALF = BLOCK_WIDTH / 2.0f;
@@ -20,18 +25,18 @@ namespace mygame
 
 		public const int OBJECT_MAX_BLOCKS = 3;
 
-		//ball
+		// Ball
 		public const float BALL_SIZE = 1.0f;
 		public const float BALL_SIZE_HALF = BALL_SIZE / 2.0f;
 
-		//object (prefabs) types
+		// Object (prefabs) types
 		public static readonly System.Type OT_PLATFORM = typeof(Platform);
 		public static readonly System.Type OT_SPIKE = typeof(Spike);
 		public static readonly System.Type OT_HOLE = typeof(Hole);
 
 		public static readonly System.Type[] OBJECT_TYPES = { OT_PLATFORM, OT_SPIKE, OT_HOLE };
 
-		//game params
+		// Game params
 		public const float SPEED_MIN = 2.0f;
 		public const float SPEED_MAX = 8.0f;//units per second
 		public const float DISTANCE_MAX = 200;//53 * 100 * 1;

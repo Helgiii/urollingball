@@ -6,16 +6,16 @@ namespace mygame
 {
 	public class Globals : Singleton<Globals>
 	{
-		//max distance passed (record)
-		public int m_maxDistance = 0;
-		public int m_maxScores = 0;
+		// Max distance passed (record)
+		public int maxDistance { get; set; } = 0;
+		public int maxScores { get; set; } = 0;
 
-		public System.Random m_random;
+		public System.Random random { get; private set; }
 
 
 		public Globals()
 		{
-			m_random = new System.Random(DateTime.Now.Millisecond);
+			random = new System.Random(DateTime.Now.Millisecond);
 		}
 	}
 }

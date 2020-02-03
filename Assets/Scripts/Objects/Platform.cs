@@ -5,16 +5,16 @@ namespace mygame
 {
 	public class Platform : BaseObject
 	{
-		MeshRenderer m_rendrer;
+		MeshRenderer rendrer;
 
 		private void Awake()
 		{
-			m_rendrer = gameObject.GetComponent<MeshRenderer>();
+			rendrer = gameObject.GetComponent<MeshRenderer>();
 		}
 
 		public override float GetRightmostX()
 		{
-			return m_rendrer.bounds.max.x;
+			return rendrer.bounds.max.x;
 		}
 	}
 }

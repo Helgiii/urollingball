@@ -235,11 +235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d7b5be72ee2fb44bf46c1f18a053b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_scrNoninit: {fileID: 1094826515}
-  m_scrPause: {fileID: 869037356}
-  m_scrIngame: {fileID: 1394555809}
-  m_scrDeath: {fileID: 256639723}
-  m_lvl: {fileID: 1814063759}
+  scrNoninit: {fileID: 1094826515}
+  scrPause: {fileID: 869037356}
+  scrIngame: {fileID: 1394555809}
+  scrDeath: {fileID: 256639723}
+  lvl: {fileID: 1814063759}
 --- !u!1 &92752262
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,7 +479,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &256639723
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2147,7 +2147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1394555809
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2520,12 +2520,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6488256891d13dd48a741464cd689661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_objPlatform: {fileID: 6327652162580555209, guid: 8a23b115f0b69d24e8e6f545f727444d,
+  objPlatform: {fileID: 6327652162580555209, guid: 8a23b115f0b69d24e8e6f545f727444d,
     type: 3}
-  m_objSpike: {fileID: 7955872209775257578, guid: 43bd506460c78b443a0aa9d54a8e93a2,
+  objSpike: {fileID: 7955872209775257578, guid: 43bd506460c78b443a0aa9d54a8e93a2,
     type: 3}
-  m_objHole: {fileID: 4191754294788447765, guid: 46228ab104bf83e46994e67a4df8c6d7,
-    type: 3}
+  objHole: {fileID: 4191754294788447765, guid: 46228ab104bf83e46994e67a4df8c6d7, type: 3}
 --- !u!1 &1846971283
 GameObject:
   m_ObjectHideFlags: 0
