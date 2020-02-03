@@ -101,7 +101,7 @@ namespace mygame
 				scrDeath.gameObject.SetActive(true);
 
 				// Set new values
-				scrDeath.Find("txtDistance").GetComponent<Text>().text = lvl.GetDistanceInt().ToString();
+				scrDeath.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(lvl.passedDistance).ToString();
 				scrDeath.Find("txtScores").GetComponent<Text>().text = lvl.scores.ToString();
 				scrDeath.Find("txtDistanceMax").GetComponent<Text>().text = Globals.Instance.maxDistance.ToString();
 				scrDeath.Find("txtScoresMax").GetComponent<Text>().text = Globals.Instance.maxScores.ToString();
@@ -119,7 +119,7 @@ namespace mygame
 			if (lvlState == Level.GameState.On || lvlState == Level.GameState.Paused)
 			{
 				scrIngame.Find("txtScores").GetComponent<Text>().text = lvl.scores.ToString();
-				scrIngame.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(lvl.GetDistanceInt()).ToString();
+				scrIngame.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(lvl.passedDistance).ToString();
 			}
 		}
 	}

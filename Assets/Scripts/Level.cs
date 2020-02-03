@@ -21,7 +21,6 @@ namespace mygame
 			}
 		}
 
-
 		protected float cameraHalfHeight;
 		protected float cameraHalfWidth;
 
@@ -31,13 +30,12 @@ namespace mygame
 		// Index of blocks[0] on the worldblocks axis
 		protected int firstBlockIndex;
 
-		protected float passedDistance = 0.0f;
+		public float passedDistance { get; set; } = 0.0f;
 
 		public int scores { get; private set; } = 0;
 
 		// Width in world units
 		protected int jumpDangerScores;
-
 
 		// Ball
 		protected GameObject ball;
@@ -47,7 +45,6 @@ namespace mygame
 		protected float ballMotionTimer;
 
 		protected float spikeWidth;
-
 
 		// Platforms
 		// Top and bottom positions
@@ -64,9 +61,7 @@ namespace mygame
 		protected Vector2 castDir = new Vector2(1, 0);
 		protected Vector2 castOrigin = new Vector2();
 
-
 		// CONSTANTS
-
 		public enum GameState
 		{
 			On = 1,
@@ -129,7 +124,6 @@ namespace mygame
 			gameState = GameState.NonInit;
 		}
 
-
 		public void ReinitLevel()
 		{
 			// Release all objects from scene
@@ -191,11 +185,6 @@ namespace mygame
 
 			gameState = GameState.Failed;
 		}
-
-
-		public float GetDistanceInt(){ return Mathf.FloorToInt(passedDistance); }
-
-
 
 		protected void ProcessPassedBlocks()
 		{
@@ -288,7 +277,6 @@ namespace mygame
 			return startIndice;
 		}
 
-
 		protected void TryGenerateObjects(int startIndice)
 		{
 			if (startIndice == -1)
@@ -372,7 +360,6 @@ namespace mygame
 				}
 			}
 		}
-
 
 		// Create gameobjects from a sequence of blocks
 		protected void BlockSeqToObjects(BlockType blockType, int lenInBlocks, int startBlockIndex, int row)
@@ -474,7 +461,6 @@ namespace mygame
 			return tr.gameObject.GetComponent<BaseObject>();
 		}
 
-
 		protected void Update()
 		{
 			if (gameState != GameState.On)
@@ -507,7 +493,6 @@ namespace mygame
 				OnHitDanger();
 				return;
 			}
-
 
 			// Move camera (and the ball) to new pos
 			Camera camera = Camera.main;
