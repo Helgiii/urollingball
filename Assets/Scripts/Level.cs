@@ -4,20 +4,26 @@ using System;
 
 namespace mygame
 {
+	public class LevelStateChangedEventArgs
+	{
+		public LevelStateChangedEventArgs(Level.State s) { State = s; }
+		public Level.State State { get; set; }
+	}
+
 	public class Level : MonoBehaviour
 	{
-		GameState _gameState = GameState.NonInit;
-		public GameState gameState
+		State _state = State.NonInit;
+		public State state
 		{
-			get { return _gameState; }
+			get { return _state; }
 			set
 			{
-				_gameState = value;
+				_state = value;
 
 				// Pause anim (all updates)
-				Time.timeScale = (_gameState == GameState.On) ? 1 : 0;
+				Time.timeScale = (_state == State.On) ? 1 : 0;
 
-				GameObject.Find("CanvasHud").GetComponent<UserInterface>().ProcessNewGameState(_gameState);
+				RaiseStateChangedEvent(_state);
 			}
 		}
 
@@ -62,7 +68,7 @@ namespace mygame
 		protected Vector2 castOrigin = new Vector2();
 
 		// CONSTANTS
-		public enum GameState
+		public enum State
 		{
 			On = 1,
 			Failed,
@@ -78,9 +84,21 @@ namespace mygame
 			MovingDown
 		}
 
-		void Awake()
+		// Events
+		public delegate void ParamsChangedHandler(object sender);
+		public event ParamsChangedHandler ParamsChanged;
+
+		public delegate void LevelStateChangedHandler(object sender, LevelStateChangedEventArgs e);
+		public event LevelStateChangedHandler LevelStateChanged;
+
+		// Reused event data so that we dont allocate it on heap every call
+		protected LevelStateChangedEventArgs stateChangedEventParams = null;
+
+		protected void Awake()
 		{
 			//Physics2D.alwaysShowColliders = true;
+
+			stateChangedEventParams = new LevelStateChangedEventArgs(State.NonInit);
 
 			// Camera size in units
 			Camera camera = Camera.main;
@@ -121,7 +139,7 @@ namespace mygame
 				blocks.Add( new BlockType[2]{0,0} );
 			
 			ReinitLevel();
-			gameState = GameState.NonInit;
+			state = State.NonInit;
 		}
 
 		public void ReinitLevel()
@@ -183,7 +201,7 @@ namespace mygame
 			if (dist > globs.maxDistance)
 				globs.maxDistance = dist;
 
-			gameState = GameState.Failed;
+			state = State.Failed;
 		}
 
 		protected void ProcessPassedBlocks()
@@ -463,7 +481,7 @@ namespace mygame
 
 		protected void Update()
 		{
-			if (gameState != GameState.On)
+			if (state != State.On)
 				return;
 
 
@@ -562,12 +580,12 @@ namespace mygame
 				++i;
 			}
 
-			UpdateHud();
+			RaiseParamsChangedEvent();
 		}
 
 		public void TryJump()
 		{
-			if (gameState != GameState.On)
+			if (state != State.On)
 				return;
 
 			if (ballState == BallState.Down)
@@ -583,7 +601,7 @@ namespace mygame
 		}
 
 		// This could be bigger than 1 page, since we have 2 pages and are moving fast
-		int CalcBallBlockIndex()
+		protected int CalcBallBlockIndex()
 		{
 			int blockIndex = Mathf.FloorToInt(ball.transform.position.x / Constants.BLOCK_WIDTH) - firstBlockIndex;
 
@@ -592,7 +610,7 @@ namespace mygame
 		}
 
 		// If no danger found returns blockcnt to the end of the 2pages
-		int CalcDangerScores(int startingIndex, int row)
+		protected int CalcDangerScores(int startingIndex, int row)
 		{
 			for (var col = startingIndex; col < blocks.Count; ++col)
 			{
@@ -609,17 +627,23 @@ namespace mygame
 			return 0;
 		}
 
-		void UpdateHud()
+		protected void RaiseParamsChangedEvent()
 		{
-			GameObject.Find("CanvasHud").GetComponent<UserInterface>().UpdateHud();
+			ParamsChanged?.Invoke(this);
+		}
+		protected void RaiseStateChangedEvent(State newState)
+		{
+			stateChangedEventParams.State = newState;
+			LevelStateChanged?.Invoke(this, stateChangedEventParams);
 		}
 
-		float GetBallXFromCamera(Camera camera)
+
+		protected float GetBallXFromCamera(Camera camera)
 		{
 			return camera.transform.position.x - cameraHalfWidth + cameraHalfWidth / 3;
 		}
 
-		void AddScores(int scores)
+		protected void AddScores(int scores)
 		{
 			if (scores == 0)
 				return;
@@ -627,7 +651,8 @@ namespace mygame
 			//Debug.Log("scores added: " + scores.ToString());
 			this.scores += scores;
 
-			UpdateHud();
+			// Dont call this since we update hud in every frame
+			//RaiseUpdateHudEvent();
 		}
 
 		/*

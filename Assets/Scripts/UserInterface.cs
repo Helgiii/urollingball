@@ -2,38 +2,44 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System;
 
 namespace mygame
 {
 	public class UserInterface : MonoBehaviour
 	{
+		// Attach those in the editor.
+
 		public Transform scrNoninit = null;
 		public Transform scrPause = null;
 		public Transform scrIngame = null;
 		public Transform scrDeath = null;
-
 		public Level lvl = null;
 
-		// Normal raycasts do not work on UI elements, they require a special kind
+		// Normal raycasts do not work on UI elements, they require a special kind.
 		protected GraphicRaycaster raycaster;
 
-		void Awake()
+		protected void Awake()
 		{
-			// Get both of the components we need to do this
+			// Get both of the components we need to do this.
 			raycaster = GetComponent<GraphicRaycaster>();
+
+			// Listen to level events
+			lvl.ParamsChanged += OnParamsChangedEvent;
+			lvl.LevelStateChanged += OnStateChangedEvent;
 		}
 
-		void Update()
+		protected void Update()
 		{
-			// Check if the left Mouse button is clicked
-			// Jump on any click outside gui elements
+			// Check if the left Mouse button is clicked.
+			// Jump on any click outside gui elements.
 			if (Input.GetKeyDown(KeyCode.Mouse0))
 			{
-				// Set up the new Pointer Event
+				// Set up the new Pointer Event.
 				var pointerData = new PointerEventData(EventSystem.current);
 				var results = new List<RaycastResult>();
 
-				// Raycast using the Graphics Raycaster and mouse click position
+				// Raycast using the Graphics Raycaster and mouse click position.
 				pointerData.position = Input.mousePosition;
 				raycaster.Raycast(pointerData, results);
 
@@ -50,7 +56,7 @@ namespace mygame
 
 
 
-		public void HideAllScreens()
+		protected void HideAllScreens()
 		{
 			scrNoninit.gameObject.SetActive(false);
 			scrPause.gameObject.SetActive(false);
@@ -60,43 +66,43 @@ namespace mygame
 
 		public void OnBtnStart()
 		{
-			lvl.gameState = Level.GameState.On;
+			lvl.state = Level.State.On;
 		}
 
 		public void OnBtnPause()
 		{
-			if (lvl.gameState == Level.GameState.On)
-				lvl.gameState = Level.GameState.Paused;
+			if (lvl.state == Level.State.On)
+				lvl.state = Level.State.Paused;
 		}
 
 		public void OnBtnContinue()
 		{
-			if (lvl.gameState == Level.GameState.Paused)
-				lvl.gameState = Level.GameState.On;
+			if (lvl.state == Level.State.Paused)
+				lvl.state = Level.State.On;
 		}
 
 		public void OnBtnPlayAgain()
 		{
-			if (lvl.gameState != Level.GameState.Failed)
+			if (lvl.state != Level.State.Failed)
 				return;
 
 			lvl.ReinitLevel();
-			lvl.gameState = Level.GameState.On;
+			lvl.state = Level.State.On;
 		}
 
-		public void ProcessNewGameState(Level.GameState gstate)
+		protected void ProcessNewLevelState(Level.State gstate)
 		{
 			HideAllScreens();
 
-			if (gstate == Level.GameState.NonInit)
+			if (gstate == Level.State.NonInit)
 			{
 				scrNoninit.gameObject.SetActive(true);
 			}
-			else if (gstate == Level.GameState.On)
+			else if (gstate == Level.State.On)
 			{
 				scrIngame.gameObject.SetActive(true);
 			}
-			else if (gstate == Level.GameState.Failed)
+			else if (gstate == Level.State.Failed)
 			{
 				scrDeath.gameObject.SetActive(true);
 
@@ -106,21 +112,30 @@ namespace mygame
 				scrDeath.Find("txtDistanceMax").GetComponent<Text>().text = Globals.Instance.maxDistance.ToString();
 				scrDeath.Find("txtScoresMax").GetComponent<Text>().text = Globals.Instance.maxScores.ToString();
 			}
-			else if (gstate == Level.GameState.Paused)
+			else if (gstate == Level.State.Paused)
 			{
 				scrIngame.gameObject.SetActive(true);
 				scrPause.gameObject.SetActive(true);
 			}
 		}
-
-		public void UpdateHud()
+		
+		protected void UpdateHud()
 		{
-			Level.GameState lvlState = lvl.gameState;
-			if (lvlState == Level.GameState.On || lvlState == Level.GameState.Paused)
+			Level.State lvlState = lvl.state;
+			if (lvlState == Level.State.On || lvlState == Level.State.Paused)
 			{
 				scrIngame.Find("txtScores").GetComponent<Text>().text = lvl.scores.ToString();
 				scrIngame.Find("txtDistance").GetComponent<Text>().text = Mathf.FloorToInt(lvl.passedDistance).ToString();
 			}
+		}
+
+		protected void OnParamsChangedEvent(object sender)
+		{
+			UpdateHud();
+		}
+		protected void OnStateChangedEvent(object sender, LevelStateChangedEventArgs eParams)
+		{
+			ProcessNewLevelState(eParams.State);
 		}
 	}
 
